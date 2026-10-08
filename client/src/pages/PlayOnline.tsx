@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, useToast } from '@/components/ui';
 import { SegmentedControl } from '@/components/setup/SegmentedControl';
@@ -20,8 +20,32 @@ export default function PlayOnline() {
   });
   const [timeControlId, setTimeControlId] = useState(params.get('tc') ?? '10+0');
   const [creating, setCreating] = useState(false);
+  const [serverStatus, setServerStatus] = useState<'unknown' | 'ok' | 'down'>('unknown');
 
   const trimmed = name.trim();
+  const serverUrl = apiBase();
+
+  useEffect(() => {
+    if (!serverUrl) {
+      setServerStatus('down');
+      return;
+    }
+    let cancelled = false;
+    const ctrl = new AbortController();
+    const timer = window.setTimeout(() => ctrl.abort(), 8000);
+    fetch(`${serverUrl}/api/health`, { signal: ctrl.signal })
+      .then((res) => {
+        if (!cancelled) setServerStatus(res.ok ? 'ok' : 'down');
+      })
+      .catch(() => {
+        if (!cancelled) setServerStatus('down');
+      })
+      .finally(() => window.clearTimeout(timer));
+    return () => {
+      cancelled = true;
+      ctrl.abort();
+    };
+  }, [serverUrl]);
 
   const create = async () => {
     if (!trimmed || creating) return;
@@ -87,6 +111,13 @@ export default function PlayOnline() {
       >
         {creating ? 'Creating…' : 'Create game & copy link'}
       </Button>
+      <p className="font-mono text-xs text-[var(--muted)]" role="status">
+        {serverStatus === 'ok'
+          ? `Server connected · ${serverUrl}`
+          : serverUrl
+            ? `Can't reach the game server · ${serverUrl}`
+            : 'No game server configured · set VITE_SERVER_URL and redeploy'}
+      </p>
     </SetupShell>
   );
 }

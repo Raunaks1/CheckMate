@@ -41,5 +41,6 @@ export function savePlayerId(roomId: string, playerId: string): void {
 export function resolveServerUrl(): string | undefined {
   const env = import.meta.env as unknown as Record<string, string | undefined>;
   const url = env['VITE_SERVER_URL'];
-  return url && url.length > 0 ? url : undefined;
+  if (!url || url.length === 0) return undefined;
+  return url.replace(/\/+$/, '');
 }
