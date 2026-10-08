@@ -1,0 +1,15 @@
+# Render blueprint: one-click reproducible game server.
+# Apply via the Render dashboard (New > Blueprint) or `render blueprint launch`.
+# Set CLIENT_ORIGIN to the Vercel app URL after the first client deploy.
+services:
+  - type: web
+    name: checkmate-server
+    runtime: node
+    buildCommand: npm run build -w shared && npm run build -w server
+    startCommand: npm run start -w server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_ORIGIN
+        sync: false
