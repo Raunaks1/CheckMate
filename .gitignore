@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+client/dist/
+server/dist/
+shared/dist/
+
+# Test output
+test-results/
+client/test-results/
+playwright-report/
+
+# OS / editor
+.DS_Store
+*.local
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Vite
+*.tsbuildinfo

@@ -1,0 +1,51 @@
+{
+  "name": "checkmate-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 5173",
+    "lint": "eslint . --max-warnings 0",
+    "audit:tokens": "sh -c '! grep -rEn \"#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?\\b\" src --include=\"*.tsx\" --include=\"*.ts\" --include=\"*.css\" | grep -v -E \"src/index.css|src/pages/Design.tsx|src/providers/ThemeProvider.tsx\"'",
+    "audit:effects": "sh -c '! grep -rEn \"linear-gradient|radial-gradient|backdrop-filter|backdrop-blur|blur-\" src --include=\"*.tsx\" --include=\"*.ts\" --include=\"*.css\"'",
+    "audit": "npm run audit:tokens && npm run audit:effects",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "sync:stockfish": "node scripts/sync-stockfish.mjs"
+  },
+  "dependencies": {
+    "checkmate-shared": "*",
+    "chess.js": "^1.4.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.9",
+    "lucide-react": "^0.453.0",
+    "nanoid": "^6.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-qr-code": "^2.2.0",
+    "react-router-dom": "^6.27.0",
+    "socket.io-client": "^4.8.0",
+    "stockfish": "^19.0.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.12.0",
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "eslint": "^9.12.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "globals": "^15.9.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "~5.6.3",
+    "typescript-eslint": "^8.9.0",
+    "vite": "^6.0.1",
+    "vitest": "^4.1.11"
+  }
+}

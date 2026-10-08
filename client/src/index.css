@@ -1,0 +1,235 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Onest', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-accent: #c6ff3d;
+}
+
+:root {
+  color-scheme: light;
+
+  --bg: #f6f6f4;
+  --surface-1: #ffffff;
+  --surface-2: #efefec;
+  --surface-3: #e7e7e2;
+  --hairline: #e2e2de;
+  --hairline-strong: #cfcfc8;
+  --text: #0a0a0b;
+  --text-2: #55555e;
+  --muted: #8a8a93;
+
+  --accent: #c6ff3d;
+  --on-accent: #0a0a0b;
+
+  --success: #3ddc97;
+  --danger: #ff5c4d;
+
+  /* Board: calm flat squares for Merida detail. Brightest object on dark UI. */
+  --sq-light: #e8e8e1;
+  --sq-dark: #9aa091;
+  --last-move: rgb(198 255 61 / 0.28);
+  --selected: #c6ff3d;
+  --legal-dot: rgb(10 10 11 / 0.25);
+  --capture-ring: rgb(10 10 11 / 0.25);
+  --check: rgb(255 92 77 / 0.35);
+  --coord-on-light: rgb(10 10 11 / 0.7);
+  --coord-on-dark: rgb(244 244 245 / 0.7);
+
+  /* Piece + eval tones (constant across themes) */
+  --piece-white: #f7f7f2;
+  --piece-black: #17171a;
+  --piece-outline-white: rgba(10, 10, 11, 0.55);
+  --piece-outline-black: rgba(244, 244, 245, 0.4);
+  --eval-white: #f4f4f5;
+  --eval-black: #17171a;
+
+  /* Back-compat aliases */
+  --surface: var(--surface-1);
+  --border: var(--hairline);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --bg: #0a0a0b;
+  --surface-1: #111113;
+  --surface-2: #17171a;
+  --surface-3: #1f1f23;
+  --hairline: #26262b;
+  --hairline-strong: #34343a;
+  --text: #f4f4f5;
+  --text-2: #9a9aa3;
+  --muted: #5f5f68;
+
+  --accent: #c6ff3d;
+  --on-accent: #0a0a0b;
+
+  --success: #3ddc97;
+  --danger: #ff5c4d;
+
+  /* Board: calm flat squares for Merida detail. Brightest object on dark UI. */
+  --sq-light: #d8dad3;
+  --sq-dark: #6d7469;
+  --last-move: rgb(198 255 61 / 0.28);
+  --selected: #c6ff3d;
+  --legal-dot: rgb(10 10 11 / 0.25);
+  --capture-ring: rgb(10 10 11 / 0.25);
+  --check: rgb(255 92 77 / 0.35);
+  --coord-on-light: rgb(10 10 11 / 0.7);
+  --coord-on-dark: rgb(244 244 245 / 0.7);
+
+  --surface: var(--surface-1);
+  --border: var(--hairline);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: clip;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+      env(safe-area-inset-left);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  input[type='text'],
+  input:not([type]),
+  select,
+  textarea {
+    border-radius: 10px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgb(198 255 61 / 0.28);
+  }
+}
+
+@layer utilities {
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  .label {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--text-2);
+  }
+
+  .surface {
+    background-color: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+  }
+
+  .surface-2 {
+    background-color: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+  }
+
+  .rule-t {
+    border-top: 1px solid var(--hairline);
+  }
+
+  .rule-b {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  /* Light theme: 1px ink border on the lime button for contrast. */
+  :root:not(.dark) .btn-primary {
+    border-color: #0a0a0b;
+  }
+
+  /* Waiting-room status dot: slow opacity pulse. No glow. */
+  .pulse-dot {
+    animation: pulse-dot 2.2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  /* Difficulty slider: flat tonal track, quiet fill, no gradients. */
+  .difficulty-slider {
+    appearance: none;
+    height: 16px;
+    border-radius: 2px;
+    background: transparent;
+    outline-offset: 4px;
+    cursor: pointer;
+  }
+
+  .difficulty-slider::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface-3);
+  }
+
+  .difficulty-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 1px solid var(--hairline-strong);
+    cursor: pointer;
+  }
+
+  .difficulty-slider::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: transparent;
+  }
+
+  .difficulty-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 1px solid var(--hairline-strong);
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
