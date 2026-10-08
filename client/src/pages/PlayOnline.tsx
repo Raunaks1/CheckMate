@@ -4,7 +4,7 @@ import { Button, useToast } from '@/components/ui';
 import { SegmentedControl } from '@/components/setup/SegmentedControl';
 import { TimeControlPicker } from '@/components/setup/TimeControlPicker';
 import { SetupShell } from '@/components/setup/SetupShell';
-import { postRoom } from '@/features/online/api';
+import { postRoom, apiBase } from '@/features/online/api';
 import { saveJoin } from '@/features/online/storage';
 
 type ColorChoice = 'white' | 'black' | 'random';
@@ -25,6 +25,14 @@ export default function PlayOnline() {
 
   const create = async () => {
     if (!trimmed || creating) return;
+    if (!apiBase() && import.meta.env.PROD) {
+      push({
+        kind: 'danger',
+        title: 'Online play is not configured',
+        description: 'This deployment has no game server URL. Set VITE_SERVER_URL and redeploy.',
+      });
+      return;
+    }
     setCreating(true);
     try {
       const body = await postRoom({ name: trimmed, color, timeControl: timeControlId });
