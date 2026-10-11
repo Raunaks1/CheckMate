@@ -1,15 +1,9 @@
-import { History, Moon, Puzzle, Settings, Swords, Sun } from 'lucide-react';
+import { Moon, Swords, Sun } from 'lucide-react';
 import { clsx } from 'clsx';
-import { LogoMark } from '@/features/board';
 import { useTheme } from '@/providers/ThemeProvider';
 import { IconButton, Tooltip } from '@/components/ui';
 
-const NAV = [
-  { id: 'play', label: 'Play', icon: Swords, active: true },
-  { id: 'puzzles', label: 'Puzzles', icon: Puzzle, active: false },
-  { id: 'history', label: 'History', icon: History, active: false },
-  { id: 'settings', label: 'Settings', icon: Settings, active: false },
-] as const;
+const NAV = [{ id: 'play', label: 'Play', icon: Swords, active: true }] as const;
 
 export function LeftRail({ collapsed = false }: { collapsed?: boolean }) {
   const { resolved, toggle } = useTheme();
@@ -24,11 +18,7 @@ export function LeftRail({ collapsed = false }: { collapsed?: boolean }) {
           : 'sticky top-0 flex h-screen w-[72px] shrink-0 flex-col items-center border-r border-[var(--hairline)] bg-[var(--surface-1)] py-4'
       }
     >
-      <span aria-label="Checkmate home" role="img" className="text-[var(--accent)]">
-        <LogoMark className="h-7 w-7" />
-      </span>
-
-      <div className="mt-8 flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-2">
         {NAV.map((item) => {
           const Icon = item.icon;
           return (
